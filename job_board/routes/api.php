@@ -4,6 +4,8 @@ use App\Http\Controllers\API\EmployeerController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\Api\JobController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -31,3 +33,13 @@ Route::put('/employers/{id}', [EmployeerController::class, 'update']);
 
 
 Route::put('/users/{id}', [UserController::class, 'update']);
+
+Route::apiResource('jobs', JobController::class);
+
+// | Method | URL              | Action         |
+// | ------ | ---------------- | -------------- |
+// | GET    | `/api/jobs`      | list all jobs  |
+// | POST   | `/api/jobs`      | create new job |
+// | GET    | `/api/jobs/{id}` | get single job |
+// | PUT    | `/api/jobs/{id}` | update job     |
+// | DELETE | `/api/jobs/{id}` | delete job     |
