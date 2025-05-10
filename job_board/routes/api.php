@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\API\EmployeerController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,3 +19,15 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+
+Route::get('/employers', [EmployeerController::class, 'index']);
+Route::get('/employers/{id}', [EmployeerController::class, 'show']);
+
+
+Route::post('/employers', [EmployeerController::class, 'store']);
+Route::put('/employers/{id}', [EmployeerController::class, 'update']);
+
+
+Route::put('/users/{id}', [UserController::class, 'update']);
