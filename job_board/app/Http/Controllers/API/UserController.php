@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\API;
 
+
+
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Employer;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -16,7 +19,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(User::all());
     }
 
     /**
@@ -76,5 +79,43 @@ class UserController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function register(Request $request){
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8',
+        ]);
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'role' => $request->role,   
+        ]);
+
+        return response()->json([
+            'message' => 'User registered successfully!',
+            'user' => $user,
+            'token' => $user->createToken('auth_token')->plainTextToken,
+        ], 201);
+    }
+
+    public function login(Request $request){
+        $request->validate([
+            'email' => 'required|string|email',
+            'password' => 'required|string',
+        ]);
+        $user = User::where('email', $request->email)->first();
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return response()->json([
+                'message' => 'Email or password is incorrect!',
+            ], 401);
+        }
+        return response()->json([
+            'message' => 'User logged in successfully!',
+            'user' => $user,
+            'token' => $user->createToken('auth_token')->plainTextToken,
+        ], 200);
     }
 }

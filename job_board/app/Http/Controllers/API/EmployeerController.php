@@ -39,7 +39,7 @@ class EmployeerController extends Controller
         }
     
         $employer = Employer::create([
-            'user_id' => 1,
+            'user_id' => auth()->user()->id,
             'company_name' => $request->company_name,
             'company_description' => $request->company_description,
             'company_logo' => $path,
