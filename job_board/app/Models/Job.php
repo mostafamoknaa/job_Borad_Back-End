@@ -16,7 +16,6 @@ class Job extends Model
         'type',
         'category_id',
         'salary_range',
-        'experience',
         'description',
         'responsibilities',
         'qualifications',
