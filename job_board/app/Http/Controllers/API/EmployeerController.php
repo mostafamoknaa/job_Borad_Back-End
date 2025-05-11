@@ -5,9 +5,18 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Employer;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class EmployeerController extends Controller
 {
+    protected $user;
+
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -35,11 +44,12 @@ class EmployeerController extends Controller
     
         $path = null;
         if ($request->hasFile('company_logo')) {
+
             $path = $request->file('company_logo')->store('company_logos', 'public');
         }
     
         $employer = Employer::create([
-            'user_id' => auth()->user()->id,
+            'user_id' => auth()->id(),
             'company_name' => $request->company_name,
             'company_description' => $request->company_description,
             'company_logo' => $path,
@@ -103,4 +113,25 @@ class EmployeerController extends Controller
     {
         //
     }
+
+public function updateUser(Request $request, $id)
+{
+
+    $request->validate([
+
+        'phone_number' => 'required|max:255',
+        'address' => 'required|string|max:255',
+    ]);
+    $employer = Employer::findOrFail($id);
+    $user = User::findOrFail($employer->user_id);
+    $user->update([
+        'phone_number' => $request->phone_number,
+        'address' => $request->address,
+    ]);
+    return response()->json([
+        'message' => 'User updated successfully!',
+        'user' => $user,
+    ], 200);
+}
+
 }
