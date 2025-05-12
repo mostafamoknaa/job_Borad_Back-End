@@ -26,4 +26,21 @@ class Job extends Model
         'approved_by',
         'employer_id'
     ];
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+    public function employer()
+    {
+        return $this->belongsTo(Employer::class);
+    }
+    public function applications()
+    {
+        return $this->hasMany(Application::class);
+    }
+    public function user()
+    {
+        return $this->belongsTo(Employer::class);
+    }
+
 }
