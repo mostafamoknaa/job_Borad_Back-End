@@ -23,14 +23,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-
-
 Route::get('/employers', [EmployeerController::class, 'index']);
 Route::get('/employers/{id}', [EmployeerController::class, 'show']);
 
-
-Route::post('/employers', [EmployeerController::class, 'store']);
-Route::put('/employers/{id}', [EmployeerController::class, 'update']);
+Route::put('/employers/update/{id}/', [EmployeerController::class, 'updateUser']);
 
 
 Route::put('/users/{id}', [UserController::class, 'update']);
