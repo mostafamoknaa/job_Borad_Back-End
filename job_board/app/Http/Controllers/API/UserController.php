@@ -116,20 +116,20 @@ class UserController extends Controller
             ], 401);
         }
     
-        // Retrieve employer_id if user is an employer
+        
         $employer_id = optional($user->employer)->id;
     
         return response()->json([
             'message' => 'User logged in successfully!',
             'user' => $user,
-            'employer_id' => $employer_id, // add this
+            'employer_id' => $employer_id, 
             'token' => $user->createToken('auth_token')->plainTextToken,
         ], 200);
     }
 
     public function getAllCandidates(){
         $candidates = User::where('role', 'candidate')
-        ->withCount('applications') // 👈 this adds applications_count
+        ->withCount('applications')
         ->paginate(10);
 
     return response()->json($candidates);
