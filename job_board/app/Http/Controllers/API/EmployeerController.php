@@ -24,9 +24,13 @@ class EmployeerController extends Controller
      */
     public function index()
     {
-        $employers = Employer::with('user')->get();
+        $employers = Employer::with('user')
+            ->withCount('jobs') // This gives jobs_count
+            ->paginate(10);
+    
         return response()->json($employers);
     }
+    
 
     /**
      * Store a newly created resource in storage.
@@ -114,25 +118,35 @@ class EmployeerController extends Controller
         //
     }
 
-public function updateUser(Request $request, $id)
-{
+    public function updateUser(Request $request, $id)
+    {
 
 
-    $request->validate([
+        $request->validate([
 
-        'phone_number' => 'required|max:255',
-        'address' => 'required|string|max:255',
-    ]);
-    $employer = Employer::findOrFail($id);
-    $user = User::findOrFail($employer->user_id);
-    $user->update([
-        'phone_number' => $request->phone_number,
-        'address' => $request->address,
-    ]);
-    return response()->json([
-        'message' => 'User updated successfully!',
-        'user' => $user,
-    ], 200);
-}
+            'phone_number' => 'required|max:255',
+            'address' => 'required|string|max:255',
+        ]);
+        $employer = Employer::findOrFail($id);
+        $user = User::findOrFail($employer->user_id);
+        $user->update([
+            'phone_number' => $request->phone_number,
+            'address' => $request->address,
+        ]);
+        return response()->json([
+            'message' => 'User updated successfully!',
+            'user' => $user,
+        ], 200);
+    }
+
+    public function myjob($id){
+        $job = Employer::findOrFail($id);
+        return response()->json($job);
+    }
+
+    public function findAllEmployers(){
+        $employers = User::where('role','employer')->paginate(10);
+        return response()->json($employers);
+    }
 
 }

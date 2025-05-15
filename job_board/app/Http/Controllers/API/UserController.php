@@ -101,21 +101,38 @@ class UserController extends Controller
         ], 201);
     }
 
-    public function login(Request $request){
+    public function login(Request $request)
+    {
         $request->validate([
             'email' => 'required|string|email',
             'password' => 'required|string',
         ]);
+    
         $user = User::where('email', $request->email)->first();
+    
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
                 'message' => 'Email or password is incorrect!',
             ], 401);
         }
+    
+        // Retrieve employer_id if user is an employer
+        $employer_id = optional($user->employer)->id;
+    
         return response()->json([
             'message' => 'User logged in successfully!',
             'user' => $user,
+            'employer_id' => $employer_id, // add this
             'token' => $user->createToken('auth_token')->plainTextToken,
         ], 200);
     }
+
+    public function getAllCandidates(){
+        $candidates = User::where('role', 'candidate')
+        ->withCount('applications') // 👈 this adds applications_count
+        ->paginate(10);
+
+    return response()->json($candidates);
+    }
+    
 }
