@@ -117,6 +117,7 @@ class EmployeerController extends Controller
 public function updateUser(Request $request, $id)
 {
 
+
     $request->validate([
 
         'phone_number' => 'required|max:255',

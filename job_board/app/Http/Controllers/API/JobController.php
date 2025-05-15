@@ -15,7 +15,8 @@ class JobController extends Controller
      */
     public function index()
     {
-        return response()->json(Job::all());
+        return response()->json(Job::with(['employer.user'])->paginate(10));
+
     }
 
     /**
@@ -27,7 +28,7 @@ class JobController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'employer_id' => 'required|exists:employers,id',
+            "employer_id" => 'required|exists:employers,id',
             'category_id' => 'required|exists:categories,id',
             'type' => 'required|in:full-time,part-time,contract,internship,temporary,freelance',
             'title' => 'required|string|max:255',
