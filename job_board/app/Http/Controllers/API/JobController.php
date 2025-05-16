@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Employer;
 use Illuminate\Http\Request;
 use App\Models\Job;
 
@@ -90,5 +91,27 @@ class JobController extends Controller
 
         $job->delete();
         return response()->json(['message' => 'Deleted']);
+    }
+
+    public function findEmployerJob($id){
+        $job = Job::where('employer_id', $id)->get();
+        if (!$job) return response()->json(['message'=> 'There is no Job yet']);
+        return response()->json($job);
+    }
+
+    public function approveJob($id){
+        $job = Job::find($id);
+        if (!$job) return response()->json(['message' => 'Not Found'], 404);
+        $job->status = 'approved';
+        $job->approved_at = now();
+        $job->save();
+        return response()->json($job);
+    }
+    public function rejectJob($id){
+        $job = Job::find($id);
+        if (!$job) return response()->json(['message' => 'Not Found'], 404);
+        $job->status = 'rejected';
+        $job->save();
+        return response()->json($job);
     }
 }
