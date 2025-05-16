@@ -44,8 +44,6 @@ Route::post('/register', [UserController::class, 'register']);
 
 
 Route::apiResource('categories', CategoryController::class);
-<<<<<<< HEAD
-=======
 
 
 Route::get('/employer/job/{id}',[JobController::class,'findEmployerJob']);
@@ -57,4 +55,3 @@ Route::put('/reject/job/{id}',[JobController::class,'rejectJob']);
 
 Route::get('allCandidates',[UserController::class,'getAllCandidates']);
 
->>>>>>> 5e3932dbfc8cc4ae709c48698ec731e5cab337f2
