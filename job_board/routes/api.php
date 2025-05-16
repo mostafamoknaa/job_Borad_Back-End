@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\ApplicationController;
 use App\Http\Controllers\API\EmployeerController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -30,7 +31,7 @@ Route::put('/employers/reupdate/{id}', [EmployeerController::class,'update']);
 
 
 Route::put('/employers/updateuser/{id}/', [EmployeerController::class, 'updateUser']);
-
+Route::get('/employer/myjob/{id}',[EmployeerController::class,'myjob']);
 
 Route::put('/users/{id}', [UserController::class, 'update']);
 
@@ -43,3 +44,17 @@ Route::post('/register', [UserController::class, 'register']);
 
 
 Route::apiResource('categories', CategoryController::class);
+<<<<<<< HEAD
+=======
+
+
+Route::get('/employer/job/{id}',[JobController::class,'findEmployerJob']);
+
+Route::get('/count/jobs/{id}',[ApplicationController::class,'countAllApplicantsOnJob']);
+
+Route::put('/aprove/job/{id}',[JobController::class,'approveJob']);
+Route::put('/reject/job/{id}',[JobController::class,'rejectJob']);
+
+Route::get('allCandidates',[UserController::class,'getAllCandidates']);
+
+>>>>>>> 5e3932dbfc8cc4ae709c48698ec731e5cab337f2
