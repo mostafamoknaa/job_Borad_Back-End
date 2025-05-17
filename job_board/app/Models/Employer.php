@@ -28,4 +28,9 @@ class Employer extends Model
     {
         return $this->hasMany(Job::class);
     }
+    public function latestJob()
+    {
+        return $this->hasOne(Job::class)->latest();
+    }   
+
 }
