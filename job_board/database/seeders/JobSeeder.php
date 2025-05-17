@@ -42,7 +42,7 @@ class JobSeeder extends Seeder
                 'status' => 'approved',
                 'approved_at' => now(),
                 'approved_by' => 1,
-                'employer_id' => 1,
+                'employer_id' => 2,
             ],
             [
                 'title' => 'Marketing Officer',
@@ -58,7 +58,7 @@ class JobSeeder extends Seeder
                 'status' => 'rejected',
                 'approved_at' => now(),
                 'approved_by' => 1,
-                'employer_id' => 1,
+                'employer_id' => 3,
             ],
             [
                 'title' => 'Full Stack Developer',
@@ -74,7 +74,7 @@ class JobSeeder extends Seeder
                 'status' => 'archived',
                 'approved_at' => now(),
                 'approved_by' => 1,
-                'employer_id' => 1,
+                'employer_id' => 3,
             ],
             [
                 'title' => 'Graphic Designer',
@@ -90,7 +90,7 @@ class JobSeeder extends Seeder
                 'status' => 'pending',
                 'approved_at' => now(),
                 'approved_by' => 1,
-                'employer_id' => 1,
+                'employer_id' => 2,
             ],
             [
                 'title' => 'Project Manager',
@@ -106,9 +106,8 @@ class JobSeeder extends Seeder
                 'status' => 'pending',
                 'approved_at' => now(),
                 'approved_by' => 1,
-                'employer_id' => 1,
+                'employer_id' => 3,
             ],
-            // أضف المزيد لو حبيت
         ];
 
         DB::table('jobs')->insert($jobs);
