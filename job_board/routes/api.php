@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\ApplicationController;
+use App\Http\Controllers\API\CandidateController;
 use App\Http\Controllers\API\EmployeerController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -54,4 +55,7 @@ Route::put('/aprove/job/{id}',[JobController::class,'approveJob']);
 Route::put('/reject/job/{id}',[JobController::class,'rejectJob']);
 
 Route::get('allCandidates',[UserController::class,'getAllCandidates']);
+
+Route::get('/candidates',[CandidateController::class,'index']);
+Route::get('/candidates/{id}', [CandidateController::class, 'show']);
 

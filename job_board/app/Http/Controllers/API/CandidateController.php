@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\CandidateResource;
 use App\Models\Candidate;
 use Illuminate\Http\Request;
+use App\Models\User;
+
 
 class CandidateController extends Controller
 {
@@ -17,19 +19,18 @@ class CandidateController extends Controller
 
     public function index(Request $request)
     {
-        $perPage = $request->integer('per_page', 12);
-        $candidates = Candidate::with('user')
-            ->latest()
-            ->paginate($perPage)
-            ->appends($request->query());
-
-         return CandidateResource::collection($candidates);
+        $candidates = Candidate::with('user') 
+            // ->latest()
+            ->get(); 
+    
+        return CandidateResource::collection($candidates);
     }
+    
 
 
     public function show($id)
     {
         $candidate = Candidate::with('user')->findOrFail($id);
-         return new CandidateResource($candidate);
+         return response()->json($candidate);
     }
 }
