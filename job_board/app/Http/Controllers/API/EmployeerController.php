@@ -149,4 +149,16 @@ class EmployeerController extends Controller
         return response()->json($employers);
     }
 
+    // public function topCompanies()
+    // {
+    //     $top = Employer::with(['user', 'jobs' => function ($query) {
+    //         $query->select('id', 'employer_id', 'location')->latest()->limit(1);
+    //     }])
+    //     ->withCount('jobs')
+    //     ->orderByDesc('jobs_count')
+    //     ->take(6)
+    //     ->get();
+
+    //     return response()->json($top);
+    // }
 }

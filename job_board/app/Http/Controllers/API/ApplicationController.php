@@ -17,7 +17,8 @@ class ApplicationController extends Controller
      */
     public function index()
     {
-        //
+        $applications = Application::with('job')->with('candidate')->paginate(10);
+        return response()->json($applications);
     }
 
     /**
@@ -39,7 +40,11 @@ class ApplicationController extends Controller
      */
     public function show($id)
     {
-        //
+        //see all the applications for a specific job
+        $applications = Application::with(['candidate.user'])
+        ->where('job_id', $id)
+        ->get();
+        return response()->json($applications);
     }
 
     /**
