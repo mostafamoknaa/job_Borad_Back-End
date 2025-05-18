@@ -58,7 +58,7 @@ class UserController extends Controller
             'phone_number' => 'required|max:255',
             'address' => 'required|string|max:255',
         ]);
-        $employer = Employer::findOrFail($id);
+        $employer = Employer::where('user_id', $id)->firstOrFail();
         $user = User::findOrFail($employer->user_id);
         $user->update([
             'phone_number' => $request->phone_number,

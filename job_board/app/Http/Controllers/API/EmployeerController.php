@@ -5,7 +5,6 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Employer;
-use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 
 class EmployeerController extends Controller
@@ -97,8 +96,9 @@ class EmployeerController extends Controller
             'company_description' => 'required|string|min:10',
         ]);
 
-        $employer = Employer::findOrFail($id);
+        $employer = Employer::where('user_id', $id)->firstOrFail();
         $employer->update($request->all());
+        
         
         return response()->json([
             'message' => 'Employer updated successfully!',
