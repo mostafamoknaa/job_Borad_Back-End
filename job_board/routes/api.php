@@ -72,3 +72,7 @@ Route::put('/candidates', [CandidateController::class, 'update'])->middleware('a
 Route::get('/applications', [ApplicationController::class, 'index']);
 Route::get('/oneapplications/{id}', [ApplicationController::class, 'show']);
 
+Route::put('/updateapplications/{id}', [ApplicationController::class, 'updateStatus']);
+
+
+Route::post('/create-checkout-session', [ApplicationController::class, 'createSession']);
