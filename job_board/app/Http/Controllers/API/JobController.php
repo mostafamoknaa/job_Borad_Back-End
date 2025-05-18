@@ -28,8 +28,9 @@ class JobController extends Controller
      */
     public function store(Request $request)
     {
+        
         $validated = $request->validate([
-            "employer_id" => 'required|exists:employers,id',
+            'employer_id' => 'required|exists:users,id',
             'category_id' => 'required|exists:categories,id',
             'type' => 'required|in:full-time,part-time,contract,internship,temporary,freelance',
             'title' => 'required|string|max:255',
@@ -44,10 +45,15 @@ class JobController extends Controller
             'approved_at' => 'nullable|date',
             'approved_by' => 'nullable|exists:users,id',
         ]);
-        
+
+        $employer = Employer::where('user_id', $validated['employer_id'])->with('user')->firstOrFail();
+
+        $validated['employer_id'] = $employer->id;
 
         $job = Job::create($validated);
+
         return response()->json($job, 201);
+
     }
 
     /**
@@ -94,7 +100,8 @@ class JobController extends Controller
     }
 
     public function findEmployerJob($id){
-        $job = Job::where('employer_id', $id)->get();
+        $employer = Employer::where('user_id', $id)->with('user')->firstOrFail();
+        $job = Job::where('employer_id', $employer->id)->get();
         if (!$job) return response()->json(['message'=> 'There is no Job yet']);
         return response()->json($job);
     }

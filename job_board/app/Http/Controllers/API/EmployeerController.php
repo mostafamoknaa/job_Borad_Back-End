@@ -75,7 +75,7 @@ class EmployeerController extends Controller
      */
     public function show($id)
     {
-        $employer = Employer::with('user')->findOrFail($id);
+        $employer = Employer::where('user_id', $id)->with('user')->firstOrFail();
         return response()->json($employer);
     }
 
