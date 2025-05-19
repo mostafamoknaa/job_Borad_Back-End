@@ -5,12 +5,18 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Application;
+use App\Models\Candidate;
 use App\Models\User;
 use App\Models\Job;
+use App\Notifications\CustomUserNotification;
 use Stripe\Stripe;
 
 class ApplicationController extends Controller
 {
+
+    public function __construct(){
+        $this->middleware('auth:api')->except(['index', 'show']);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -30,8 +36,31 @@ class ApplicationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'cover_letter' => 'required|string',
+            'resume' => 'required|file|mimes:pdf,doc,docx|max:5120', // 5MB limit
+            'job_id' => 'required|exists:jobs,id',
+        ]);
+    
+        $path = $request->file('resume')->store('resumes');
+    
+        $candidate = Candidate::where('user_id', $request->candidate_id)->first();
+    
+        if (!$candidate) {
+            return response()->json(['message' => 'Candidate not found.'], 404);
+        }
+    
+        Application::create([
+            'cover_letter' => $request->cover_letter,
+            'resume' => $path,
+            'job_id' => $request->job_id,
+            'candidate_id' => $candidate->id,
+        ]);
+    
+        return response()->json(['message' => 'Application submitted successfully.']);
     }
+    
+
 
     /**
      * Display the specified resource.
@@ -57,9 +86,20 @@ class ApplicationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $application = Application::findOrFail($id);
+        $application->status = $request->status;
+        $application->save();
+    
+        
+        if ($request->status === 'accepted') {
+            $user = $application->candidate->user;
+            $jobTitle = $application->job->title ?? 'a job';
+            $user->notify(new CustomUserNotification($jobTitle));
+        }
+    
+        return response()->json(['message' => 'Application updated']);
     }
-
+    
     /**
      * Remove the specified resource from storage.
      *
@@ -82,6 +122,9 @@ class ApplicationController extends Controller
         $application = Application::find($id);
         $application->status = 'accepted';
         $application->save();
+        
+        // $user = $application->candidate->user;
+        // $user->notify(new CustomUserNotification($application->job->title, $user->id));
         return response()->json(['message' => 'Status updated successfully']);
     }
 

@@ -66,8 +66,8 @@ Route::put('/reject/job/{id}',[JobController::class,'rejectJob']);
 
 Route::get('allCandidates',[UserController::class,'getAllCandidates']);
 
-Route::get('/candidates',[CandidateController::class,'index']);
-Route::get('/candidates/{id}', [CandidateController::class, 'show']);
+// Route::get('/candidates',[CandidateController::class,'index']);
+// Route::get('/candidates/{id}', [CandidateController::class, 'show']);
 
 Route::apiResource('candidates', CandidateController::class);
 Route::put('/candidates', [CandidateController::class, 'update'])->middleware('auth:api');
@@ -79,3 +79,16 @@ Route::put('/updateapplications/{id}', [ApplicationController::class, 'updateSta
 
 
 Route::post('/create-checkout-session', [ApplicationController::class, 'createSession']);
+
+Route::post('/addApplication', [ApplicationController::class, 'store']);
+
+
+Route::middleware('auth:sanctum')->get('/notifications', function (Request $request) {
+    return [
+        'all' => $request->user()->notifications,
+        'unread' => $request->user()->unreadNotifications,
+    ];
+});
+
+Route::put('/jobs/{id}', [JobController::class, 'update']);
+
