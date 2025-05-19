@@ -9,6 +9,7 @@ use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\JobController;
 use App\Http\Controllers\API\CategoryController;
 use App\Models\Employer;
+use Illuminate\Support\Facades\DB;
 
 
 /*
@@ -34,7 +35,16 @@ Route::put('/employers/reupdate/{id}', [EmployeerController::class,'update']);
 
 Route::put('/employers/updateuser/{id}/', [EmployeerController::class, 'updateUser']);
 Route::get('/employer/myjob/{id}',[EmployeerController::class,'myjob']);
-Route::get('/top-companies', [EmployeerController::class, 'topCompanies']);
+Route::get('/popular-vacancies', [JobController::class, 'mostPopularVacancies']);
+// Route::get('/popular-vacancies', function () {
+//     return DB::table('jobs')
+//         ->select('title', DB::raw('COUNT(*) as positions'))
+//         ->groupBy('title')
+//         ->orderByDesc('positions')
+//         ->limit(12) 
+//         ->get();
+// });
+// Route::get('/top-companies', [EmployeerController::class, 'topCompanies']);
 Route::get('/top-companies', function () {
     return Employer::with(['user', 'latestJob'])
         ->withCount('jobs')

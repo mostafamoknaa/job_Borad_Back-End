@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Employer;
 use Illuminate\Http\Request;
 use App\Models\Job;
+use Illuminate\Support\Facades\DB;
+
 
 class JobController extends Controller
 {
@@ -121,4 +123,15 @@ class JobController extends Controller
         $job->save();
         return response()->json($job);
     }
+    public function mostPopularVacancies()
+{
+    $popular = DB::table('jobs')
+        ->select('title', DB::raw('COUNT(*) as positions'))
+        ->groupBy('title')
+        ->orderByDesc('positions')
+        ->limit(12) 
+        ->get();
+
+    return response()->json($popular);
+}
 }
