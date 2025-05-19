@@ -16,7 +16,7 @@ class JobController extends Controller
      */
     public function index()
     {
-        return response()->json(Job::with(['employer.user'])->paginate(10));
+        return response()->json(Job::with(['employer.user'])->paginate(9));
 
     }
 

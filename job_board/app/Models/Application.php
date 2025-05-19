@@ -21,5 +21,8 @@ class Application extends Model
     {
         return $this->belongsTo(Candidate::class);
     }
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
 
 }

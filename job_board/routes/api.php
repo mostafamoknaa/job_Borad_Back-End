@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\JobController;
 use App\Http\Controllers\API\CategoryController;
+use App\Models\Employer;
 
 
 /*
@@ -33,6 +34,15 @@ Route::put('/employers/reupdate/{id}', [EmployeerController::class,'update']);
 
 Route::put('/employers/updateuser/{id}/', [EmployeerController::class, 'updateUser']);
 Route::get('/employer/myjob/{id}',[EmployeerController::class,'myjob']);
+Route::get('/top-companies', [EmployeerController::class, 'topCompanies']);
+Route::get('/top-companies', function () {
+    return Employer::with(['user', 'latestJob'])
+        ->withCount('jobs')
+        ->orderByDesc('jobs_count')
+        ->take(6)
+        ->get();
+});
+
 
 Route::put('/users/{id}', [UserController::class, 'update']);
 
@@ -59,3 +69,13 @@ Route::get('allCandidates',[UserController::class,'getAllCandidates']);
 Route::get('/candidates',[CandidateController::class,'index']);
 Route::get('/candidates/{id}', [CandidateController::class, 'show']);
 
+Route::apiResource('candidates', CandidateController::class);
+Route::put('/candidates', [CandidateController::class, 'update'])->middleware('auth:api');
+
+Route::get('/applications', [ApplicationController::class, 'index']);
+Route::get('/oneapplications/{id}', [ApplicationController::class, 'show']);
+
+Route::put('/updateapplications/{id}', [ApplicationController::class, 'updateStatus']);
+
+
+Route::post('/create-checkout-session', [ApplicationController::class, 'createSession']);

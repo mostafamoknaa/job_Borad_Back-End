@@ -15,6 +15,20 @@ return [
     |
     */
 
+    /*
+    |--------------------------------------------------------------------------
+    | CORS Paths
+    |--------------------------------------------------------------------------
+    |
+    | Here you may configure the paths that should be accessible via CORS.
+    | You can use '*' to allow all paths. Otherwise, you can specify an array of paths.
+    |'paths' => ['api/*', 'sanctum/csrf-cookie'],
+    |'allowed_origins' => ['http://localhost:5173'],
+    |'allowed_methods' => ['*'],
+    |'allowed_headers' => ['*'],
+
+    */
+
     // 'paths' => ['api/*', 'sanctum/csrf-cookie'],
     'paths' => ['api/*'],
 
