@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Employer;
 use App\Models\User;
+use App\Http\Resources\EmployerResource;
 
 class EmployeerController extends Controller
 {
@@ -13,7 +14,7 @@ class EmployeerController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth:api');
+        $this->middleware('auth:api')->except(['index', 'show']);
     }
 
     /**
@@ -21,13 +22,22 @@ class EmployeerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $employers = Employer::with('user')
-            ->withCount('jobs') // This gives jobs_count
-            ->paginate(10);
+        $perPage = $request->integer('per_page', 12);
+        $employers = Employer::with('user') 
+        ->withCount('jobs')     
+        ->latest()
+        ->paginate($perPage)
+        ->appends(request()->query());
+
+        return EmployerResource::collection($employers); // to return json from resource not from controller
+        // return response()->json($employers);
+        // $employers = Employer::with('user')
+        //     ->withCount('jobs') // This gives jobs_count
+        //     ->paginate(10);
     
-        return response()->json($employers);
+        // return response()->json($employers);
     }
     
 
