@@ -10,8 +10,7 @@ use App\Models\Candidate;
 class Application extends Model
 {
     use HasFactory;
-
-    
+    protected $fillable = ['job_id', 'candidate_id', 'resume', 'cover_letter'];
     public function job()
     {
         return $this->belongsTo(Job::class);

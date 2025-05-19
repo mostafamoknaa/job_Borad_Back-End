@@ -66,7 +66,7 @@ class JobController extends Controller
      */
     public function show($id)
     {
-        $job = Job::find($id);
+        $job = Job::with('employer')->find($id);
         return $job ? response()->json($job) : response()->json(['message' => 'Not Found'], 404);
     }
 
@@ -79,11 +79,28 @@ class JobController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $job = Job::find($id);
-        if (!$job) return response()->json(['message' => 'Not Found'], 404);
+        $job = Job::findOrFail($id);
 
-        $job->update($request->all());
-        return response()->json($job);
+        $validated = $request->validate([
+            'category_id' => 'required|exists:categories,id',
+            'type' => 'required|string|max:255',
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'responsibilities' => 'nullable|string',
+            'qualifications' => 'nullable|string',
+            'salary_range' => 'nullable|string|max:255',
+            'benefits' => 'nullable|string',
+            'location' => 'required|string|max:255',
+            'application_deadline' => 'required|date',
+        ]);
+    
+        $job->update($validated);
+    
+        return response()->json([
+            'message' => 'Job updated successfully',
+            'job' => $job
+        ]);
+    
     }
 
     /**
