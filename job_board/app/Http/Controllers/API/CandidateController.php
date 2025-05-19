@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Candidate;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class CandidateController extends Controller
@@ -50,7 +51,11 @@ class CandidateController extends Controller
 
     public function show($id)
     {
-        $candidate = Candidate::with('user')->findOrFail($id);
+        $user = User::findOrFail($id);
+        $candidate = Candidate::with('user')
+            ->where('user_id', $user->id)
+            ->firstOrFail();
+        
         return response()->json($candidate);
     }
 
