@@ -44,8 +44,11 @@ class ApplicationController extends Controller
     
         $path = $request->file('resume')->store('resumes');
     
-        $candidate = Candidate::where('user_id', $request->candidate_id)->first();
-    
+        // $candidate = Candidate::where('user_id', $request->candidate_id)->first();
+
+        $candidate = User::find($request->candidate_id);
+
+        
         if (!$candidate) {
             return response()->json(['message' => 'Candidate not found.'], 404);
         }

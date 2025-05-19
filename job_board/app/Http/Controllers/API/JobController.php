@@ -143,7 +143,7 @@ class JobController extends Controller
     public function mostPopularVacancies()
 {
     $popular = DB::table('jobs')
-        ->select('title', DB::raw('COUNT(*) as positions'))
+        ->select('title', DB::raw('MAX(id) as id'), DB::raw('COUNT(*) as positions'))
         ->groupBy('title')
         ->orderByDesc('positions')
         ->limit(12) 
