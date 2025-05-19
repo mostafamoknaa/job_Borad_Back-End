@@ -3,41 +3,19 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-<<<<<<< HEAD
 use App\Http\Resources\CandidateResource;
 use App\Models\Candidate;
-use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 
 
 class CandidateController extends Controller
 {
-
     public function __construct()
     {
         $this->middleware('auth:api')->except(['index', 'show']);
-    }
-
-    public function index(Request $request)
-    {
-        $candidates = Candidate::with('user') 
-            // ->latest()
-            ->get(); 
-    
-        return CandidateResource::collection($candidates);
-    }
-    
-
-=======
-use Illuminate\Http\Request;
-use App\Models\Candidate;
-use Illuminate\Support\Facades\Auth;
-
-class CandidateController extends Controller
-{
-    public function __construct()
-    {
-        $this->middleware('auth:api');
     }
 
     public function index()
@@ -73,19 +51,14 @@ class CandidateController extends Controller
             'candidate' => $candidate,
         ], 201);
     }
->>>>>>> main
 
     public function show($id)
     {
         $candidate = Candidate::with('user')->findOrFail($id);
-<<<<<<< HEAD
          return response()->json($candidate);
     }
-}
-=======
-        return response()->json($candidate);
-    }
 
+ 
     public function update(Request $request)
     {
         $request->validate([
@@ -141,4 +114,3 @@ class CandidateController extends Controller
         ], 201);
     }
 }
->>>>>>> main
