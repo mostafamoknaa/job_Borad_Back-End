@@ -3,6 +3,8 @@
 namespace App\Http\Middleware;
 
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
+use App\Http\Controllers\API\UserController;
+
 
 class Authenticate extends Middleware
 {

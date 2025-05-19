@@ -66,6 +66,9 @@ Route::put('/reject/job/{id}',[JobController::class,'rejectJob']);
 
 Route::get('allCandidates',[UserController::class,'getAllCandidates']);
 
+Route::get('/candidates',[CandidateController::class,'index']);
+Route::get('/candidates/{id}', [CandidateController::class, 'show']);
+
 Route::apiResource('candidates', CandidateController::class);
 Route::put('/candidates', [CandidateController::class, 'update'])->middleware('auth:api');
 

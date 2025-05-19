@@ -3,16 +3,21 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CandidateResource;
+use App\Models\Candidate;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Candidate;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
+
+
 class CandidateController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api');
+        $this->middleware('auth:api')->except(['index', 'show']);
     }
 
     public function index()
@@ -59,6 +64,7 @@ class CandidateController extends Controller
         return response()->json($candidate);
     }
 
+ 
     public function update(Request $request)
     {
         $request->validate([

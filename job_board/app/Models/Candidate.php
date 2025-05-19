@@ -17,12 +17,15 @@ class Candidate extends Model
         'image',
     ];
 
+    public function jobs(){
+        return $this->belongsTo(Job::class,"applications");
+    }
+
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
     // public function jobs(){
     //     return $this->belongsTo(Job::class,"applications");
     // }
 
-    public function user()
-{
-    return $this->belongsTo(User::class);
-}
 }

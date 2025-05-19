@@ -2,6 +2,11 @@
 
 namespace Database\Seeders;
 
+<<<<<<< HEAD
+use App\Models\Employer;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+=======
+>>>>>>> main
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -9,6 +14,9 @@ class EmployerSeeder extends Seeder
 {
     public function run()
     {
+<<<<<<< HEAD
+        Employer::factory()->count(50)->create();
+=======
         $employers = [
             [
                 'user_id' => 1,
@@ -57,5 +65,6 @@ class EmployerSeeder extends Seeder
         ];
 
         DB::table('employers')->insert($employers);
+>>>>>>> main
     }
 }
