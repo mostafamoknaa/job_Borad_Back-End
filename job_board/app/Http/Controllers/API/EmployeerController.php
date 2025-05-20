@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 use App\Models\Employer;
 use App\Models\User;
 use App\Http\Resources\EmployerResource;
+use App\Notifications\CustomUserNotification;
+
+
+
 
 class EmployeerController extends Controller
 {
@@ -87,7 +91,7 @@ class EmployeerController extends Controller
      */
     public function show($id)
     {
-        $employer = Employer::with('user')->findOrFail($id);
+        $employer = Employer::where('user_id', $id)->with('user')->firstOrFail();
         return response()->json($employer);
     }
 
@@ -173,4 +177,42 @@ class EmployeerController extends Controller
 
     //     return response()->json($top);
     // }
+
+
+    public function notifyUser($userId)
+    {
+        $user = User::findOrFail($userId);
+    
+        $user->notify(new CustomUserNotification([
+            'message' => 'New order placed!',
+            'link' => '/orders/123'
+        ]));
+    
+        return response()->json(['status' => 'Notification sent']);
+    }
+
+    public function getNotifications()
+    {
+        $user = auth()->user();
+
+        return response()->json([
+            'all' => $user->notifications,
+            'unread' => $user->unreadNotifications,
+        ]);
+    }
+    public function markNotificationAsRead($id)
+    {
+        $user = auth()->user();
+
+        $notification = $user->notifications()->where('id', $id)->first();
+
+        if ($notification) {
+            $notification->markAsRead();
+            return response()->json(['status' => 'Marked as read']);
+        }
+
+        return response()->json(['error' => 'Notification not found'], 404);
+    }
+
+
 }
