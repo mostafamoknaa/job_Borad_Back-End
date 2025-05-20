@@ -10,7 +10,8 @@ use App\Models\User;
 use App\Models\Job;
 use App\Notifications\CustomUserNotification;
 use Stripe\Stripe;
-
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ApplicationReceived;
 class ApplicationController extends Controller
 {
 
@@ -43,12 +44,9 @@ class ApplicationController extends Controller
         ]);
     
         $path = $request->file('resume')->store('resumes');
+        $user = User::find(auth()->id());
+        $candidate = Candidate::where('user_id', $request->candidate_id)->first();
     
-        // $candidate = Candidate::where('user_id', $request->candidate_id)->first();
-
-        $candidate = User::find($request->candidate_id);
-
-        
         if (!$candidate) {
             return response()->json(['message' => 'Candidate not found.'], 404);
         }
@@ -92,13 +90,9 @@ class ApplicationController extends Controller
         $application = Application::findOrFail($id);
         $application->status = $request->status;
         $application->save();
+
+        // send mail to candidate
     
-        
-        if ($request->status === 'accepted') {
-            $user = $application->candidate->user;
-            $jobTitle = $application->job->title ?? 'a job';
-            $user->notify(new CustomUserNotification($jobTitle));
-        }
     
         return response()->json(['message' => 'Application updated']);
     }
@@ -125,9 +119,12 @@ class ApplicationController extends Controller
         $application = Application::find($id);
         $application->status = 'accepted';
         $application->save();
-        
-        // $user = $application->candidate->user;
-        // $user->notify(new CustomUserNotification($application->job->title, $user->id));
+
+        // send mail to candidate
+        // $user = User::find($application->candidate->user_id);
+        // $job = Job::find($application->job_id);
+        // Mail::to($user->email)->send(new ApplicationReceived($user, $job));
+
         return response()->json(['message' => 'Status updated successfully']);
     }
 
@@ -155,6 +152,13 @@ class ApplicationController extends Controller
         ]);
 
         return response()->json(['sessionId' => $session->id]);
+    }
+
+    public function viewcanddidateappication(){
+        $user = User::find(auth()->id());
+        $candidate = Candidate::where('user_id', auth()->id())->first();
+        $application = Application::where('candidate_id',$candidate->id)->with('job')->get();
+        return response()->json($application);
     }
 
 }

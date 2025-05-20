@@ -102,3 +102,7 @@ Route::middleware('auth:sanctum')->get('/notifications', function (Request $requ
 
 Route::put('/jobs/{id}', [JobController::class, 'update']);
 
+Route::get('/adminjob', [JobController::class, 'alljobs']);
+
+Route::get('/userApplication', [ApplicationController::class, 'viewcanddidateappication']);
+

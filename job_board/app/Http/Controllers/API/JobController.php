@@ -18,10 +18,17 @@ class JobController extends Controller
      */
     public function index()
     {
-        return response()->json(Job::with(['employer.user'])->paginate(9));
-
+        return response()->json(
+            Job::with(['employer.user'])
+                ->where('status', 'approved')
+                ->paginate(20)
+        );        
     }
 
+    public function alljobs()
+    {
+        return response()->json(Job::with(['employer.user'])->paginate(20));        
+    }
     /**
      * Store a newly created resource in storage.
      *

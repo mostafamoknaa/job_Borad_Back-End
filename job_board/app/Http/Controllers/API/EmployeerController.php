@@ -27,21 +27,39 @@ class EmployeerController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
-    {
-        $perPage = $request->integer('per_page', 12);
-        $employers = Employer::with('user') 
-        ->withCount('jobs')     
-        ->latest()
-        ->paginate($perPage)
-        ->appends(request()->query());
+{
+    $perPage = $request->integer('per_page', 12);
+    $search = $request->query('search');
 
-        return EmployerResource::collection($employers); // to return json from resource not from controller
-        // return response()->json($employers);
-        // $employers = Employer::with('user')
-        //     ->withCount('jobs') // This gives jobs_count
-        //     ->paginate(10);
+    $query = Employer::with('user')
+        ->withCount('jobs');
+
     
+    if ($search) {
+        $query->where('company_name', 'like', '%' . $search . '%');
+    }
+
+    $employers = $query->latest()
+        ->paginate($perPage)
+        ->appends($request->query());
+    {
+        // $perPage = $request->integer('per_page', 10);
+        // $employers = Employer::with('user') 
+        // ->withCount('jobs')     
+        // ->latest()
+        // ->paginate($perPage)
+        // ->appends(request()->query());
+
+    return EmployerResource::collection($employers);
+}
+
+        // return EmployerResource::collection($employers); // to return json from resource not from controller
         // return response()->json($employers);
+        $employers = Employer::with('user')
+            ->withCount('jobs') // This gives jobs_count
+            ->paginate(10);
+    
+        return response()->json($employers);
     }
     
 
@@ -176,41 +194,6 @@ class EmployeerController extends Controller
     //     return response()->json($top);
     // }
 
-
-    public function notifyUser($userId)
-    {
-        $user = User::findOrFail($userId);
-    
-        $user->notify(new CustomUserNotification([
-            'message' => 'New order placed!',
-            'link' => '/orders/123'
-        ]));
-    
-        return response()->json(['status' => 'Notification sent']);
-    }
-
-    public function getNotifications()
-    {
-        $user = auth()->user();
-
-        return response()->json([
-            'all' => $user->notifications,
-            'unread' => $user->unreadNotifications,
-        ]);
-    }
-    public function markNotificationAsRead($id)
-    {
-        $user = auth()->user();
-
-        $notification = $user->notifications()->where('id', $id)->first();
-
-        if ($notification) {
-            $notification->markAsRead();
-            return response()->json(['status' => 'Marked as read']);
-        }
-
-        return response()->json(['error' => 'Notification not found'], 404);
-    }
 
 
 }
