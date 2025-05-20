@@ -27,6 +27,21 @@ class EmployeerController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
+{
+    $perPage = $request->integer('per_page', 12);
+    $search = $request->query('search');
+
+    $query = Employer::with('user')
+        ->withCount('jobs');
+
+    
+    if ($search) {
+        $query->where('company_name', 'like', '%' . $search . '%');
+    }
+
+    $employers = $query->latest()
+        ->paginate($perPage)
+        ->appends($request->query());
     {
         // $perPage = $request->integer('per_page', 10);
         // $employers = Employer::with('user') 
@@ -34,6 +49,9 @@ class EmployeerController extends Controller
         // ->latest()
         // ->paginate($perPage)
         // ->appends(request()->query());
+
+    return EmployerResource::collection($employers);
+}
 
         // return EmployerResource::collection($employers); // to return json from resource not from controller
         // return response()->json($employers);
