@@ -41,7 +41,7 @@ class CandidateController extends Controller
             $query->where('gender', $request->input('gender'));
         }
 
-        $perPage = $request->input('per_page', 10);
+        $perPage = $request->input('per_page', 12);
         $candidates = $query->paginate($perPage);
 
         return response()->json([
