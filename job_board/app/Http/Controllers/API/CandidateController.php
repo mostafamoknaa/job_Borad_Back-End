@@ -21,40 +21,47 @@ class CandidateController extends Controller
     public function index(Request $request)
     {
         $query = Candidate::with('user');
-
-        //search with name
-        if ($request->has('search')) {
+    
+        /* ---------- SEARCH (name OR education) ---------- */
+        if ($request->filled('search')) {
             $search = $request->input('search');
-            $query->whereHas('user', function ($q) use ($search) {
-                $q->where('name', 'like', "%$search%");
-            })
-                ->orWhere('education', 'like', "%$search%");
+    
+            // group the ORs so later filters apply to BOTH conditions
+            $query->where(function ($sub) use ($search) {
+                $sub->whereHas('user', function ($q) use ($search) {
+                        $q->where('name', 'like', "%{$search}%");
+                    })
+                    ->orWhere('education', 'like', "%{$search}%");
+            });
         }
-
-        //filter with experiance
-        if ($request->has('experience_level')) {
+    
+        /* ---------- EXPERIENCE ---------- */
+        if ($request->filled('experience_level')) {
             $query->where('experience_level', $request->input('experience_level'));
         }
-
-        //filter with gender
-        if ($request->has('gender')) {
+    
+        /* ---------- GENDER ---------- */
+        if ($request->filled('gender')) {
             $query->where('gender', $request->input('gender'));
         }
-
-        $perPage = $request->input('per_page', 12);
+    
+        /* ---------- PAGINATION ---------- */
+        $perPage    = $request->input('per_page', 12);
         $candidates = $query->paginate($perPage);
-
+    
         return response()->json([
             'success' => true,
-            'data' => $candidates->items(),
-            'meta' => [
+            'data'    => $candidates->items(),
+            'meta'    => [
                 'current_page' => $candidates->currentPage(),
-                'last_page' => $candidates->lastPage(),
-                'per_page' => $candidates->perPage(),
-                'total' => $candidates->total(),
-            ]
+                'last_page'    => $candidates->lastPage(),
+                'per_page'     => $candidates->perPage(),
+                'total'        => $candidates->total(),
+            ],
         ]);
     }
+    
+    
 
     public function store(Request $request)
     {
