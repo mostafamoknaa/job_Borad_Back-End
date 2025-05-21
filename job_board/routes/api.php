@@ -95,4 +95,6 @@ Route::put('/jobs/{id}', [JobController::class, 'update']);
 Route::get('/adminjob', [JobController::class, 'alljobs']);
 
 Route::get('/userApplication', [ApplicationController::class, 'viewcanddidateappication']);
+Route::get('/countApplication', [ApplicationController::class, 'countCandidateApplications']);
+Route::get('/adminEmp', [EmployeerController::class,'adminallemp']);
 

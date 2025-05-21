@@ -157,8 +157,22 @@ class ApplicationController extends Controller
     public function viewcanddidateappication(){
         $user = User::find(auth()->id());
         $candidate = Candidate::where('user_id', auth()->id())->first();
-        $application = Application::where('candidate_id',$candidate->id)->with('job')->get();
+        $application = Application::where('candidate_id',$candidate->id)
+        ->with('job')
+        ->get();
         return response()->json($application);
     }
+
+    public function countCandidateApplications(){
+        $user = User::find(auth()->id());
+        $candidate = Candidate::where('user_id', auth()->id())->first();
+        $application = Application::where('candidate_id',$candidate->id)
+        ->with('job')
+        ->get();
+
+        $count = $application->count();
+        return response()->json($count);
+    }
+
 
 }

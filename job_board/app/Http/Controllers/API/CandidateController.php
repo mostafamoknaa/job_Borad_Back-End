@@ -86,7 +86,8 @@ class CandidateController extends Controller
 
     public function show($id)
     {
-        $candidate = Candidate::with('user')->findOrFail($id);
+
+        $candidate = Candidate::with('user')->where('user_id',$id)->first();
         return response()->json($candidate);
     }
 
