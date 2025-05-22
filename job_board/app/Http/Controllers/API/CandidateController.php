@@ -153,4 +153,12 @@ class CandidateController extends Controller
             'candidate' => $candidate,
         ], 201);
     }
+   
+    public function checkCandidate(){
+        $exists = Candidate::where('user_id', auth()->id())->exists();
+
+        return response()->json([
+            'exists' => $exists
+        ]);
+    }
 }

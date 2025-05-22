@@ -98,3 +98,5 @@ Route::get('/userApplication', [ApplicationController::class, 'viewcanddidateapp
 Route::get('/countApplication', [ApplicationController::class, 'countCandidateApplications']);
 Route::get('/adminEmp', [EmployeerController::class,'adminallemp']);
 
+Route::get('/checkCandidate', [CandidateController::class,'checkCandidate']);
+

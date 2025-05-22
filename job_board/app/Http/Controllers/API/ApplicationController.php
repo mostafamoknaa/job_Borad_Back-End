@@ -43,7 +43,7 @@ class ApplicationController extends Controller
             'job_id' => 'required|exists:jobs,id',
         ]);
     
-        $path = $request->file('resume')->store('resumes');
+        $path = $request->file('resume')->store('resumes', 'public');
         $user = User::find(auth()->id());
         $candidate = Candidate::where('user_id', $request->candidate_id)->first();
     
